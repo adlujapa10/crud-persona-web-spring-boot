@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${esEdicion ? 'Editar' : 'Nueva'} + ' Persona - Sistema CRM'">Formulario Persona</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fas fa-users me-2"></i>Sistema CRM
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">
+                            <i class="fas fa-home me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/personas}">
+                            <i class="fas fa-list me-1"></i>Personas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/personas/nueva}">
+                            <i class="fas fa-plus me-1"></i>Nueva Persona
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="form-container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2>
+                                <i class="fas fa-user-plus me-2" th:if="${!esEdicion}"></i>
+                                <i class="fas fa-edit me-2" th:if="${esEdicion}"></i>
+                                <span th:text="${esEdicion ? 'Editar' : 'Nueva'} + ' Persona'"></span>
+                            </h2>
+                            <p class="text-muted">
+                                <span th:text="${esEdicion ? 'Modifica la información de la persona' : 'Completa la información para registrar una nueva persona'}"></span>
+                            </p>
+                        </div>
+                        <a th:href="@{/personas}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensajes de Error -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Formulario -->
+            <form th:action="${esEdicion ? '/crm/personas/actualizar/' + persona.id : '/crm/personas'}" 
+                  th:object="${persona}" method="post" class="needs-validation" novalidate>
+                
+                <!-- Información Personal -->
+                <div class="form-section">
+                    <h4 class="mb-3">
+                        <i class="fas fa-user me-2"></i>Información Personal
+                    </h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="nombre" 
+                                       th:field="*{nombre}" 
+                                       placeholder="Nombre"
+                                       required>
+                                <label for="nombre" class="required-field">Nombre</label>
+                                <div class="invalid-feedback">
+                                    El nombre es obligatorio
+                                </div>
+                                <div th:if="${#fields.hasErrors('nombre')}" class="text-danger small">
+                                    <span th:errors="*{nombre}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="apellido" 
+                                       th:field="*{apellido}" 
+                                       placeholder="Apellido"
+                                       required>
+                                <label for="apellido" class="required-field">Apellido</label>
+                                <div class="invalid-feedback">
+                                    El apellido es obligatorio
+                                </div>
+                                <div th:if="${#fields.hasErrors('apellido')}" class="text-danger small">
+                                    <span th:errors="*{apellido}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="cedula" 
+                                       th:field="*{cedula}" 
+                                       placeholder="Cédula"
+                                       required>
+                                <label for="cedula" class="required-field">Cédula</label>
+                                <div class="invalid-feedback">
+                                    La cédula es obligatoria
+                                </div>
+                                <div th:if="${#fields.hasErrors('cedula')}" class="text-danger small">
+                                    <span th:errors="*{cedula}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="edad" 
+                                       th:field="*{edad}" 
+                                       placeholder="Edad"
+                                       min="1" 
+                                       max="120">
+                                <label for="edad">Edad</label>
+                                <div class="invalid-feedback">
+                                    La edad debe estar entre 1 y 120 años
+                                </div>
+                                <div th:if="${#fields.hasErrors('edad')}" class="text-danger small">
+                                    <span th:errors="*{edad}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="sexo" th:field="*{sexo}">
+                                    <option value="">Seleccione...</option>
+                                    <option th:each="sexo : ${sexos}" 
+                                            th:value="${sexo}" 
+                                            th:text="${sexo.descripcion}"></option>
+                                </select>
+                                <label for="sexo">Sexo</label>
+                                <div th:if="${#fields.hasErrors('sexo')}" class="text-danger small">
+                                    <span th:errors="*{sexo}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="rol" 
+                                       th:field="*{rol}" 
+                                       placeholder="Rol">
+                                <label for="rol">Rol</label>
+                                <div th:if="${#fields.hasErrors('rol')}" class="text-danger small">
+                                    <span th:errors="*{rol}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="form-section">
+                    <h4 class="mb-3">
+                        <i class="fas fa-address-book me-2"></i>Información de Contacto
+                    </h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="telefono" 
+                                       th:field="*{telefono}" 
+                                       placeholder="Teléfono">
+                                <label for="telefono">Teléfono</label>
+                                <div th:if="${#fields.hasErrors('telefono')}" class="text-danger small">
+                                    <span th:errors="*{telefono}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       th:field="*{email}" 
+                                       placeholder="Email">
+                                <label for="email">Email</label>
+                                <div class="invalid-feedback">
+                                    Ingrese un email válido
+                                </div>
+                                <div th:if="${#fields.hasErrors('email')}" class="text-danger small">
+                                    <span th:errors="*{email}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-flex justify-content-between">
+                    <a th:href="@{/personas}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2" th:if="${esEdicion}"></i>
+                        <i class="fas fa-plus me-2" th:if="${!esEdicion}"></i>
+                        <span th:text="${esEdicion ? 'Actualizar' : 'Guardar'} + ' Persona'"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Validación del formulario
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Validación de email
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                this.setCustomValidity('Ingrese un email válido');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Validación de edad
+        document.getElementById('edad').addEventListener('input', function() {
+            const edad = parseInt(this.value);
+            
+            if (this.value && (edad < 1 || edad > 120)) {
+                this.setCustomValidity('La edad debe estar entre 1 y 120 años');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>
