@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class PersonaController {
 
     private static final Logger log = LoggerFactory.getLogger(PersonaController.class);
-
+    
     private final PersonaService personaService;
 
     public PersonaController(PersonaService personaService) {
@@ -40,19 +40,19 @@ public class PersonaController {
     @GetMapping
     public String listarPersonas(Model model) {
         log.info("Mostrando lista de personas");
-
+        
         try {
             List<Persona> personas = personaService.obtenerTodas();
             PersonaService.EstadisticasPersonas estadisticas = personaService.obtenerEstadisticas();
-
+            
             log.info("Total de personas obtenidas: {}", personas.size());
             for (Persona persona : personas) {
                 log.debug("Persona: ID={}, Nombre={}, Cédula={}", persona.getId(), persona.getNombreCompleto(), persona.getCedula());
             }
-
+            
             model.addAttribute("personas", personas);
             model.addAttribute("estadisticas", estadisticas);
-
+            
             return "personas/lista";
         } catch (Exception e) {
             log.error("Error al obtener personas", e);
@@ -67,11 +67,11 @@ public class PersonaController {
     @GetMapping("/nueva")
     public String mostrarFormularioNueva(Model model) {
         log.info("Mostrando formulario para nueva persona");
-
+        
         model.addAttribute("persona", new Persona());
         model.addAttribute("esEdicion", false);
         model.addAttribute("sexos", Persona.Sexo.values());
-
+        
         return "personas/formulario";
     }
 
@@ -81,13 +81,13 @@ public class PersonaController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         log.info("Mostrando formulario para editar persona con ID: {}", id);
-
+        
         try {
             Persona persona = personaService.obtenerPorId(id);
             model.addAttribute("persona", persona);
             model.addAttribute("esEdicion", true);
             model.addAttribute("sexos", Persona.Sexo.values());
-
+            
             return "personas/formulario";
         } catch (EntityNotFoundException e) {
             log.warn("Persona no encontrada con ID: {}", id);
@@ -99,19 +99,19 @@ public class PersonaController {
      * Guardar nueva persona
      */
     @PostMapping
-    public String guardarPersona(@Valid @ModelAttribute Persona persona,
-                                 BindingResult bindingResult,
-                                 Model model,
-                                 RedirectAttributes redirectAttributes) {
+    public String guardarPersona(@Valid @ModelAttribute Persona persona, 
+                                BindingResult bindingResult, 
+                                Model model, 
+                                RedirectAttributes redirectAttributes) {
         log.info("Guardando nueva persona: {}", persona.getNombreCompleto());
-
+        
         if (bindingResult.hasErrors()) {
             log.warn("Errores de validación en persona: {}", bindingResult.getAllErrors());
             model.addAttribute("esEdicion", false);
             model.addAttribute("sexos", Persona.Sexo.values());
             return "personas/formulario";
         }
-
+        
         try {
             personaService.guardar(persona);
             redirectAttributes.addFlashAttribute("mensaje", "Persona guardada exitosamente");
@@ -130,20 +130,20 @@ public class PersonaController {
      * Actualizar persona existente
      */
     @PostMapping("/actualizar/{id}")
-    public String actualizarPersona(@PathVariable Long id,
-                                    @Valid @ModelAttribute Persona persona,
-                                    BindingResult bindingResult,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) {
+    public String actualizarPersona(@PathVariable Long id, 
+                                   @Valid @ModelAttribute Persona persona, 
+                                   BindingResult bindingResult, 
+                                   Model model, 
+                                   RedirectAttributes redirectAttributes) {
         log.info("Actualizando persona con ID: {}", id);
-
+        
         if (bindingResult.hasErrors()) {
             log.warn("Errores de validación en persona: {}", bindingResult.getAllErrors());
             model.addAttribute("esEdicion", true);
             model.addAttribute("sexos", Persona.Sexo.values());
             return "personas/formulario";
         }
-
+        
         try {
             personaService.actualizar(id, persona);
             redirectAttributes.addFlashAttribute("mensaje", "Persona actualizada exitosamente");
@@ -167,7 +167,7 @@ public class PersonaController {
     @PostMapping("/eliminar/{id}")
     public String eliminarPersona(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.info("Eliminando persona con ID: {}", id);
-
+        
         try {
             personaService.eliminar(id);
             redirectAttributes.addFlashAttribute("mensaje", "Persona eliminada exitosamente");
@@ -179,7 +179,7 @@ public class PersonaController {
             log.error("Error al eliminar persona con ID: {}", id, e);
             redirectAttributes.addFlashAttribute("error", "Error al eliminar la persona");
         }
-
+        
         return "redirect:/personas";
     }
 
@@ -189,13 +189,13 @@ public class PersonaController {
     @GetMapping("/buscar")
     public String buscarPersonas(@RequestParam String termino, Model model) {
         log.info("Buscando personas con término: {}", termino);
-
+        
         try {
             List<Persona> personas = personaService.buscarPorTermino(termino);
             model.addAttribute("personas", personas);
             model.addAttribute("terminoBusqueda", termino);
             model.addAttribute("estadisticas", personaService.obtenerEstadisticas());
-
+            
             return "personas/lista";
         } catch (Exception e) {
             log.error("Error al buscar personas", e);
@@ -210,13 +210,13 @@ public class PersonaController {
     @GetMapping("/filtrar/rol/{rol}")
     public String filtrarPorRol(@PathVariable String rol, Model model) {
         log.info("Filtrando personas por rol: {}", rol);
-
+        
         try {
             List<Persona> personas = personaService.buscarPorRol(rol);
             model.addAttribute("personas", personas);
             model.addAttribute("filtroRol", rol);
             model.addAttribute("estadisticas", personaService.obtenerEstadisticas());
-
+            
             return "personas/lista";
         } catch (Exception e) {
             log.error("Error al filtrar personas por rol", e);
@@ -231,13 +231,13 @@ public class PersonaController {
     @GetMapping("/filtrar/sexo/{sexo}")
     public String filtrarPorSexo(@PathVariable Persona.Sexo sexo, Model model) {
         log.info("Filtrando personas por sexo: {}", sexo);
-
+        
         try {
             List<Persona> personas = personaService.buscarPorSexo(sexo);
             model.addAttribute("personas", personas);
             model.addAttribute("filtroSexo", sexo);
             model.addAttribute("estadisticas", personaService.obtenerEstadisticas());
-
+            
             return "personas/lista";
         } catch (Exception e) {
             log.error("Error al filtrar personas por sexo", e);
@@ -252,20 +252,20 @@ public class PersonaController {
     @PostMapping("/limpiar-duplicados")
     public ResponseEntity<Map<String, Object>> limpiarDuplicados() {
         log.info("Solicitud para limpiar duplicados");
-
+        
         try {
             personaService.limpiarDuplicados();
             Map<String, Object> response = new HashMap<>();
             response.put("mensaje", "Datos duplicados eliminados correctamente");
             response.put("success", true);
-
+            
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error al limpiar duplicados", e);
             Map<String, Object> response = new HashMap<>();
             response.put("mensaje", "Error al limpiar duplicados: " + e.getMessage());
             response.put("success", false);
-
+            
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
