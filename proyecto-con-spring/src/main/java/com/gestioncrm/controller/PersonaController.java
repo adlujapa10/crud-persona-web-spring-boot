@@ -20,10 +20,11 @@ import java.util.HashMap;
 
 /**
  * Controlador para la gestión de personas
- * Maneja las peticiones HTTP y la navegación
+ * Maneja las peticiones HTTP y la lógica de negocio relacionada con personas
  */
 @Controller
 @RequestMapping("/personas")
+@CrossOrigin
 public class PersonaController {
 
     private static final Logger log = LoggerFactory.getLogger(PersonaController.class);
@@ -33,6 +34,8 @@ public class PersonaController {
     public PersonaController(PersonaService personaService) {
         this.personaService = personaService;
     }
+
+    // ========== ENDPOINTS THYMELEAF (VISTAS) ==========
 
     /**
      * Página principal - Lista de personas
@@ -246,30 +249,6 @@ public class PersonaController {
         }
     }
 
-    /**
-     * Limpiar datos duplicados
-     */
-    @PostMapping("/limpiar-duplicados")
-    public ResponseEntity<Map<String, Object>> limpiarDuplicados() {
-        log.info("Solicitud para limpiar duplicados");
-        
-        try {
-            personaService.limpiarDuplicados();
-            Map<String, Object> response = new HashMap<>();
-            response.put("mensaje", "Datos duplicados eliminados correctamente");
-            response.put("success", true);
-            
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Error al limpiar duplicados", e);
-            Map<String, Object> response = new HashMap<>();
-            response.put("mensaje", "Error al limpiar duplicados: " + e.getMessage());
-            response.put("success", false);
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
     // ========== ENDPOINTS REST PARA FRONTEND REACT ==========
 
     /**
@@ -339,9 +318,6 @@ public class PersonaController {
         } catch (EntityNotFoundException e) {
             log.warn("Persona no encontrada con ID: {}", id);
             return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            log.warn("Error al actualizar persona: {}", e.getMessage());
-            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             log.error("Error al actualizar persona", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -381,7 +357,7 @@ public class PersonaController {
      */
     @GetMapping("/api/buscar")
     @ResponseBody
-    public ResponseEntity<List<Persona>> buscarPersonas(@RequestParam String termino) {
+    public ResponseEntity<List<Persona>> buscarPersonasAPI(@RequestParam String termino) {
         log.info("API: Buscando personas con término: {}", termino);
         try {
             List<Persona> personas = personaService.buscarPorTermino(termino);
@@ -397,7 +373,7 @@ public class PersonaController {
      */
     @GetMapping("/api/filtrar/rol/{rol}")
     @ResponseBody
-    public ResponseEntity<List<Persona>> filtrarPorRol(@PathVariable String rol) {
+    public ResponseEntity<List<Persona>> filtrarPorRolAPI(@PathVariable String rol) {
         log.info("API: Filtrando personas por rol: {}", rol);
         try {
             List<Persona> personas = personaService.buscarPorRol(rol);
@@ -413,7 +389,7 @@ public class PersonaController {
      */
     @GetMapping("/api/filtrar/sexo/{sexo}")
     @ResponseBody
-    public ResponseEntity<List<Persona>> filtrarPorSexo(@PathVariable Persona.Sexo sexo) {
+    public ResponseEntity<List<Persona>> filtrarPorSexoAPI(@PathVariable Persona.Sexo sexo) {
         log.info("API: Filtrando personas por sexo: {}", sexo);
         try {
             List<Persona> personas = personaService.buscarPorSexo(sexo);
@@ -429,7 +405,7 @@ public class PersonaController {
      */
     @GetMapping("/api/estadisticas")
     @ResponseBody
-    public ResponseEntity<PersonaService.EstadisticasPersonas> obtenerEstadisticas() {
+    public ResponseEntity<PersonaService.EstadisticasPersonas> obtenerEstadisticasAPI() {
         log.info("API: Obteniendo estadísticas");
         try {
             PersonaService.EstadisticasPersonas estadisticas = personaService.obtenerEstadisticas();
@@ -455,6 +431,31 @@ public class PersonaController {
         } catch (Exception e) {
             log.error("Error al verificar cédula", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Limpiar datos duplicados (JSON)
+     */
+    @PostMapping("/api/limpiar-duplicados")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> limpiarDuplicadosAPI() {
+        log.info("API: Solicitud para limpiar duplicados");
+        
+        try {
+            personaService.limpiarDuplicados();
+            Map<String, Object> response = new HashMap<>();
+            response.put("mensaje", "Datos duplicados eliminados correctamente");
+            response.put("success", true);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error al limpiar duplicados", e);
+            Map<String, Object> response = new HashMap<>();
+            response.put("mensaje", "Error al limpiar duplicados: " + e.getMessage());
+            response.put("success", false);
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

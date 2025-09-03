@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,4 +36,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
      * Buscar usuario por ID de persona
      */
     Optional<Usuario> findByPersonaId(Long personaId);
+
+    /**
+     * Buscar usuarios por nombre de usuario (búsqueda parcial)
+     */
+    List<Usuario> findByUsuarioContainingIgnoreCase(String termino);
 }

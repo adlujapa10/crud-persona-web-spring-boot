@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "7d222be8-9ce8-4da0-9ce0-d53a2ff5361e",
+		"name": "personas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47648412",
+		"_collection_link": "https://jaimesadriana10-4124541.postman.co/workspace/Adriana-Lucia~60d6aa39-50bf-4b92-85fe-03ade51e446b/collection/47648412-7d222be8-9ce8-4da0-9ce0-d53a2ff5361e?action=share&source=collection_link&creator=47648412"
+	},
+	"item": [
+		{
+			"name": "Obtener todas las personas",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/crm/personas/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"crm",
+						"personas",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener persona por ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/crm/personas/api/11",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"crm",
+						"personas",
+						"api",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear persona",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Lucia\",\r\n  \"apellido\": \"Pacheco\",\r\n  \"cedula\": \"1098765432\",\r\n  \"telefono\": \"3204567890\",\r\n  \"email\": \"lucia@example.com\",\r\n  \"edad\": 28,\r\n  \"sexo\": \"F\",\r\n  \"rol\": \"Vendedor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/crm/personas/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"crm",
+						"personas",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualiizar persona",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Adri Lucia\",\r\n  \"apellido\": \"Pacheco Jaimes\",\r\n  \"cedula\": \"1098765432\",\r\n  \"telefono\": \"3204567890\",\r\n  \"email\": \"lucia@example.com\",\r\n  \"edad\": 28,\r\n  \"sexo\": \"F\",\r\n  \"rol\": \"Vendedor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/crm/personas/api/11",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"crm",
+						"personas",
+						"api",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar persona",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Adri Lucia\",\r\n  \"apellido\": \"Pacheco Jaimes\",\r\n  \"cedula\": \"1098765432\",\r\n  \"telefono\": \"3204567890\",\r\n  \"email\": \"lucia@example.com\",\r\n  \"edad\": 28,\r\n  \"sexo\": \"F\",\r\n  \"rol\": \"Vendedor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/crm/personas/api/11",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"crm",
+						"personas",
+						"api",
+						"11"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
